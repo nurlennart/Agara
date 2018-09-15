@@ -91,6 +91,5 @@ async def hug(ctx, userToHug):
     await asyncio.sleep(2)
     await message.edit(embed=embed7)
 
-bot.loop.create_task(infoEmbed.uptimeCounter(bot))
 # run the bot
 bot.run(parser.get('agara', 'token'))
