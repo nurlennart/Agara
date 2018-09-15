@@ -6,27 +6,77 @@ import asyncio
 from commands.commandWeather import weatherEmbed
 from commands.commandInfo import InfoEmbed
 from commands.startPoll import Poll
+from database import mongo
 
+# init bot
 bot = commands.Bot(command_prefix='!')
+
+# init config
+parser = SafeConfigParser()
+parser.read('config.ini')
 
 infoEmbed = InfoEmbed(bot)
 
 poll = Poll(bot)
-
-
-parser = SafeConfigParser()
-parser.read('config.ini')
 
 @bot.event
 async def on_ready():
     print('Logged in as')
     print(bot.user.name)
     print(bot.user.id)
-    print('------')
+    print('---- Time to take over the world. lawl. ----')
 
+    db = await mongo.Connection()
+    guilds = db.guilds
+    guilds.ensure_index('guildId', unique=True)
+    # add all guilds to database on startup
+    for guild in bot.guilds:
+        guildId = guild.id
+        guildName = guild.name
+        guildToInsert = {
+            'guildName' : guildName,
+            'guildId' : guildId
+        }
+        try:
+            result = guilds.insert_one(guildToInsert)
+            print(result)
+        except Exception as err:
+            print(str(err) + " while adding guild. It probably already exists in database.")
+
+    await updateGame()
+
+async def updateGame():
     # change game
     game = discord.Game(str(len(bot.guilds)) + " Server")
     await bot.change_presence(activity=game)
+
+@bot.event
+async def on_guild_join(guild):
+    db = await mongo.Connection()
+    guilds = db.guilds
+    guilds.ensure_index('guildId', unique=True)
+
+    guildToInsert = {
+        'guildName' : guild.name,
+        'guildId' : guild.id
+    }
+    try:
+        result = guilds.insert_one(guildToInsert)
+        print("guild added to database. result:" + str(result))
+    except Exception as err:
+        print(str(err) + " while adding joined guild. It probably already exists in database.")
+
+    await updateGame()
+
+@bot.event
+async def on_guild_remove(guild):
+    db = await mongo.Connection()
+    guilds = db.guilds
+    result = guilds.delete_one( { "guildId" :guild.id } )
+
+    print(result)
+
+    await updateGame()
 
 @bot.command()
 async def weather(ctx, City):
