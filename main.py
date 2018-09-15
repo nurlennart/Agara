@@ -62,19 +62,19 @@ async def startpoll(ctx, question, seconds):
 async def hug(ctx, userToHug):
     hugColor = 0xeee657
 
-    embed1 = discord.Embed(title=str(ctx.message.author) + " hugs " + str(userToHug), color=hugColor, description="🤖----🤖")
+    embed1 = discord.Embed(title=str(ctx.message.author) + " hugs ", color=hugColor, description="🤖----🤖 " + userToHug)
 
-    embed2 = discord.Embed(title=str(ctx.message.author) + " hugs " + str(userToHug), color=hugColor, description="🤖---🤖")
+    embed2 = discord.Embed(title=str(ctx.message.author) + " hugs ", color=hugColor, description="🤖---🤖 " + userToHug)
 
-    embed3 = discord.Embed(title=str(ctx.message.author) + " hugs " + str(userToHug), color=hugColor, description="🤖--🤖")
+    embed3 = discord.Embed(title=str(ctx.message.author) + " hugs ", color=hugColor, description="🤖--🤖 " + userToHug)
 
-    embed4 = discord.Embed(title=str(ctx.message.author) + " hugs " + str(userToHug), color=hugColor, description="🤖-🤖")
+    embed4 = discord.Embed(title=str(ctx.message.author) + " hugs ", color=hugColor, description="🤖-🤖 " + userToHug)
 
-    embed5 = discord.Embed(title=str(ctx.message.author) + " hugs " + str(userToHug), color=hugColor, description="🤖💚🤖")
+    embed5 = discord.Embed(title=str(ctx.message.author) + " hugs ", color=hugColor, description="🤖💚🤖 " + userToHug)
 
-    embed6 = discord.Embed(title=str(ctx.message.author) + " hugs " + str(userToHug), color=hugColor, description="🤖💫💜💫🤖")
+    embed6 = discord.Embed(title=str(ctx.message.author) + " hugs ", color=hugColor, description="🤖💫💜💫🤖 " + userToHug)
 
-    embed7 = discord.Embed(title=str(ctx.message.author) + " hugs " + str(userToHug), color=hugColor, description="🤖💗🤖")
+    embed7 = discord.Embed(title=str(ctx.message.author) + " hugs ", color=hugColor, description="🤖💗🤖 " + userToHug)
 
     message = await ctx.send(embed=embed1)
 
