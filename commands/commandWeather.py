@@ -22,7 +22,7 @@ class weatherEmbed:
 
         weather_icon_url = 'http://openweathermap.org/img/w/' + weather_icon + ".png"
 
-        weather_embed = discord.Embed(title="Wetter für " + City, color=0xeee657)
+        weather_embed = discord.Embed(title="Wetter für " + City, color=0x9b59b6)
         weather_embed.set_thumbnail(url=weather_icon_url)
         weather_embed.add_field(name="Aktuell", value=weather_description, inline=True)
         weather_embed.add_field(name="Aktuelle Temperatur", value=str(weather_temperature) + " °C", inline=True)
