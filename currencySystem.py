@@ -67,7 +67,7 @@ class currencysystem:
         currencysystem = db.currencysystem
 
         currencysystem.update_one(
-            {"userid": userId, "guildid" : guildId},
+            {"userid": userId, "guildid": guildId},
                 {
                 "$inc": {
                     "messagecount" : 1,

@@ -6,6 +6,7 @@ import asyncio
 import pymongo
 from commands.commandWeather import weatherEmbed
 from commands.commandInfo import InfoEmbed
+from commands.commandGif import gifHandler
 from commands.startPoll import Poll
 from currencySystem import currencysystem
 
@@ -150,7 +151,41 @@ async def hug(ctx, userToHug):
     await message.edit(embed=embed7)
 
 @bot.command()
-async def register(ctx):
+async def gif(ctx, query):
+    userId = int(ctx.author.id)
+    guildId = int(ctx.guild.id)
+
+    db = mongo_client['agara']
+    currencysystem = db.currencysystem
+    getFromDb = currencysystem.find_one({ "userid":userId, "guildid":guildId })
+
+    if getFromDb != None:
+        userBalance = getFromDb['balance']
+        if int(userBalance) >= 1:
+            sendGif = await gifHandler.getGif(ctx, query)
+
+            if sendGif == True:
+                currencysystem.update_one(
+                    {"userid": userId, "guildid": guildId},
+                        {
+                        "$inc": {
+                            "balance" : -1
+                        }
+                    }
+                )
+            else:
+                return
+        else:
+            balance_not_sufficient = discord.Embed(title="AgaCoins nicht ausreichend", description="Das kannst du dir mit deinen **" + str(userBalance) + "** AgaCoins noch nicht leisten. !gif kostet **1** AgaCoin. 😭", color=0x9b59b6)
+            await ctx.send(embed=balance_not_sufficient)
+            # withdrawal 1 agacoin
+    else:
+        user_not_in_currencysystem = discord.Embed(title="Das wird nichts.", description="Das ist ein AgaCoin Feature. Um dieses zu nutzen, musst du dich im Punktesystem registrieren (**!register**) und Punkte sammeln. Tu es, es lohnt sich! 🤫", color=0x9b59b6)
+        await ctx.send(embed=user_not_in_currencysystem)
+
+# currencysystem
+@bot.command()
+async def register(ctx, query):
     await currencysystem.registerUser(ctx)
 
 @bot.command()
@@ -161,6 +196,7 @@ async def unregister(ctx):
 async def balance(ctx):
     await currencysystem.showBalance(ctx)
 
+# !help
 @bot.command(alias=["hilfe"])
 async def help(ctx):
     help_embed = discord.Embed(title="Hier werden Sie geholfen!", color=0x9b59b6)
