@@ -178,7 +178,6 @@ async def gif(ctx, query):
         else:
             balance_not_sufficient = discord.Embed(title="AgaCoins nicht ausreichend", description="Das kannst du dir mit deinen **" + str(userBalance) + "** AgaCoins noch nicht leisten. !gif kostet **1** AgaCoin. 😭", color=0x9b59b6)
             await ctx.send(embed=balance_not_sufficient)
-            # withdrawal 1 agacoin
     else:
         user_not_in_currencysystem = discord.Embed(title="Das wird nichts.", description="Das ist ein AgaCoin Feature. Um dieses zu nutzen, musst du dich im Punktesystem registrieren (**!register**) und Punkte sammeln. Tu es, es lohnt sich! 🤫", color=0x9b59b6)
         await ctx.send(embed=user_not_in_currencysystem)
