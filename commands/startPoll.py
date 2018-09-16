@@ -16,4 +16,3 @@ class Poll:
         result_embed.add_field(name="➖", value=int(downvotes) -1)
 
         return result_embed
-        #await ctx.send(embed=info_embed)
