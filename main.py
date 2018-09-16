@@ -162,7 +162,7 @@ async def balance(ctx):
 @bot.command(alias=["hilfe"])
 async def help(ctx):
     help_embed = discord.Embed(title="Hier werden Sie geholfen!", color=0x9b59b6)
-    help_embed.add_field(name="__Punktesystem__\n", value="Das Punktesystem weist dir (wenn du registriert bist), für jede geschriebene Nachricht Punkte zu. In Zukunft wird es möglich sein, mit diesen Punkten exklusive Befehle zu nutzen, sodass sich das Registrieren im Punktesystem auch lohnt. 🙂", inline=True)
+    help_embed.add_field(name="__Punktesystem__\n", value="Das Punktesystem weist dir (wenn du registriert bist), für jede geschriebene Nachricht 0.1 Punkte zu. In Zukunft wird es möglich sein, mit diesen Punkten exklusive Befehle zu nutzen, sodass sich das Registrieren im Punktesystem auch lohnt. 🙂", inline=True)
     help_embed.add_field(name="!register", value="Fügt dich zum Punktesystem hinzu")
     help_embed.add_field(name="!unregister", value="Löscht dich aus dem Punktesystem")
     help_embed.add_field(name="!balance (!kontostand, !agacoins)", value="Zeigt dir deinen aktuellen Kontostand")
