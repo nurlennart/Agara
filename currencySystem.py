@@ -3,7 +3,11 @@ from discord.ext import commands
 from configparser import SafeConfigParser
 import asyncio
 import pymongo
-from database import mongo
+
+parser = SafeConfigParser()
+parser.read('config.ini')
+
+mongo_client = pymongo.MongoClient("mongodb+srv://" + str(parser.get('mongodb', 'auth_string')) + "@cluster0-1fhvf.mongodb.net/agara?retryWrites=true")
 
 class currencysystem:
     async def registerUser(ctx):
@@ -11,7 +15,7 @@ class currencysystem:
         userName = str(ctx.message.author)
         guildId = int(ctx.message.guild.id)
 
-        db = await mongo.Connection()
+        db = mongo_client['agara']
         currencysystem = db.currencysystem
         currencysystem.ensure_index([("guildid" , pymongo.DESCENDING),("userid", pymongo.ASCENDING)], unique=True)
 
@@ -38,7 +42,7 @@ class currencysystem:
         guildId = int(ctx.message.guild.id)
         userName = str(ctx.message.author)
 
-        db = await mongo.Connection()
+        db = mongo_client['agara']
         currencysystem = db.currencysystem
         try:
             result = currencysystem.delete_one( { "userid" :userId, "guildid" :guildId } )
@@ -54,12 +58,12 @@ class currencysystem:
     async def unregisterWholeGuild(guild):
         guildId = guild.id
 
-        db = await mongo.Connection()
+        db = mongo_client['agara']
         currencysystem = db.currencysystem
         currencysystem.delete_many( { "guildid" :guildId })
 
     async def updateMessageCount(userId, guildId):
-        db = await mongo.Connection()
+        db = mongo_client['agara']
         currencysystem = db.currencysystem
 
         currencysystem.update_one(
@@ -77,7 +81,7 @@ class currencysystem:
         guildId = int(ctx.message.guild.id)
         userName = str(ctx.message.author.mention)
 
-        db = await mongo.Connection()
+        db = mongo_client['agara']
         currencysystem = db.currencysystem
         try:
             balance = currencysystem.find_one({ "userid":userId, "guildid":guildId })

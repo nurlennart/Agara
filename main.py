@@ -3,10 +3,10 @@ from discord.ext import commands
 import json, requests
 from configparser import SafeConfigParser
 import asyncio
+import pymongo
 from commands.commandWeather import weatherEmbed
 from commands.commandInfo import InfoEmbed
 from commands.startPoll import Poll
-from database import mongo
 from currencySystem import currencysystem
 
 # init bot
@@ -20,6 +20,8 @@ infoEmbed = InfoEmbed(bot)
 
 poll = Poll(bot)
 
+mongo_client = pymongo.MongoClient("mongodb+srv://" + str(parser.get('mongodb', 'auth_string')) + "@cluster0-1fhvf.mongodb.net/agara?retryWrites=true")
+
 @bot.event
 async def on_ready():
     print('Logged in as')
@@ -27,7 +29,7 @@ async def on_ready():
     print(bot.user.id)
     print('---- Time to take over the world. lawl. ----')
 
-    db = await mongo.Connection()
+    db = mongo_client['agara']
     guilds = db.guilds
     guilds.ensure_index('guildId', unique=True)
     # add all guilds to database on startup
@@ -64,7 +66,7 @@ async def on_message(message):
 
 @bot.event
 async def on_guild_join(guild):
-    db = await mongo.Connection()
+    db = mongo_client['agara']
     guilds = db.guilds
     guilds.ensure_index('guildId', unique=True)
 
@@ -82,7 +84,7 @@ async def on_guild_join(guild):
 
 @bot.event
 async def on_guild_remove(guild):
-    db = await mongo.Connection()
+    db = mongo_client['agara']
     guilds = db.guilds
     result = guilds.delete_one( { "guildId" :guild.id } )
     print(result)
