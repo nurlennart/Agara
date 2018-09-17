@@ -184,7 +184,7 @@ async def gif(ctx, query):
 
 # currencysystem
 @bot.command()
-async def register(ctx, query):
+async def register(ctx):
     await currencysystem.registerUser(ctx)
 
 @bot.command()
