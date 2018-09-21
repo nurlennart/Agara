@@ -87,7 +87,7 @@ class currencysystem:
             balance = currencysystem.find_one({ "userid":userId, "guildid":guildId })
 
             currencysystem_balance = discord.Embed(title="Punktesystem", color=0x9b59b6)
-            currencysystem_balance.add_field(name="Kontostand", value=userName + " besitzt aktuell **" + str(balance['balance']) + "** AgaCoins 💰", inline=True)
+            currencysystem_balance.add_field(name="Kontostand", value=userName + " besitzt aktuell **" + str(round(balance['balance'], 2)) + "** AgaCoins 💰", inline=True)
             await ctx.send(embed=currencysystem_balance)
         except Exception as err:
             currencysystem_balance_error = discord.Embed(title="Ups, da ist was schiefgelaufen", color=0xe74c3c, description="Entweder bist du noch gar nicht im Punktesystem, oder die Datenbank brennt mal wieder. Call 911.")
