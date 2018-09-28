@@ -205,7 +205,7 @@ async def balance(ctx):
     await currencysystem.showBalance(ctx)
 
 # !help
-@bot.command(alias=["hilfe"])
+@bot.command(aliases=["hilfe"])
 async def help(ctx):
     help_embed = discord.Embed(title="Hier werden Sie geholfen!", color=0x9b59b6)
     help_embed.add_field(name="__Punktesystem__\n", value="Das Punktesystem weist dir für jede geschriebene Nachricht 0.1 Punkte zu. In Zukunft wird es möglich sein, mit diesen Punkten exklusive Befehle zu nutzen. 🙂", inline=True)
