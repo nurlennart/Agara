@@ -107,8 +107,8 @@ async def on_member_remove(member):
     userId = member.id
     guildId = member.guild.id
 
-    if currencysystem.userExists(userId, guildId) != None:
-        currencysystem.unregisterUser(member)
+    if await currencysystem.userExists(userId, guildId) != None:
+        await currencysystem.unregisterUser(member)
     else:
         return
 
