@@ -60,7 +60,7 @@ async def on_message(message):
     userId = message.author.id
     guildId = message.guild.id
 
-    if message.content.startswith(('!', '?'. '~')):
+    if message.content.startswith(('!', '?', '~')):
         return
     else:
         if(message.author.bot != True):
