@@ -51,7 +51,7 @@ async def on_ready():
 
 async def updateGame():
     # change game
-    game = discord.Game(str(len(bot.guilds)) + " Server" + " | !hilfe")
+    game = discord.Game(str(len(bot.guilds)) + " Server" + " | aga!hilfe")
     await bot.change_presence(activity=game)
 
 @bot.event
