@@ -119,5 +119,5 @@ class currencysystem:
                     inline_state = False
             await ctx.send(embed=currencysystem_leaderboard)
         else:
-            currencysystem_leaderboard_error = discord.Embed(title="Server nicht Datenbank", color=0xe74c3c, description="Kein Nutzer aus diesem Server befindet sich in der Datenbank. Nutzer werden nach ihrer ersten Nachricht eingetragen.")
+            currencysystem_leaderboard_error = discord.Embed(title="Server nicht in Datenbank", color=0xe74c3c, description="Kein Nutzer aus diesem Server befindet sich in der Datenbank. Nutzer werden nach ihrer ersten Nachricht eingetragen.")
             await ctx.send(embed=currencysystem_leaderboard_error)
