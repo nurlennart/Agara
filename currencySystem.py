@@ -104,7 +104,7 @@ class currencysystem:
         find_guild = currencysystem.find_one({ "guildid" : guildId })
 
         if find_guild != None:
-            five_highest = currencysystem.find({ "guildid" : guildId }, limit = 5).sort('balance', -1)
+            five_highest = currencysystem.find({ "guildid" : guildId }, limit = 5).sort('messagecount', -1)
 
             currencysystem_leaderboard = discord.Embed(title="Leaderboard", color=0x9b59b6)
             count = 1

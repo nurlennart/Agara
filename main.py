@@ -212,15 +212,17 @@ async def gif(ctx, query):
 async def help(ctx):
     help_embed = discord.Embed(title="Hier werden Sie geholfen!", color=0x9b59b6)
     help_embed.add_field(name="__Punktesystem__\n", value="Das Punktesystem weist dir für jede geschriebene Nachricht 0.1 Punkte zu. In Zukunft wird es möglich sein, mit diesen Punkten exklusive Befehle zu nutzen. 🙂", inline=True)
-    help_embed.add_field(name="!balance (!kontostand, !agacoins)", value="Zeigt dir deinen aktuellen Kontostand")
+    help_embed.add_field(name="aga!balance (!kontostand, !agacoins)", value="Zeigt dir deinen aktuellen Kontostand")
+    help_embed.add_field(name="aga!leaderboard" value="Zeigt dir die Nutzer mit den meisten Nachrichten/AgaCoins an")
     help_embed.add_field(name="__Allgemeine Befehle__", value="Agara hat noch mehr als nur das Punktesystem drauf, ich schwöre!", inline=True)
-    help_embed.add_field(name="!help (!hilfe)", value="Ähm ja, da bist du gerade.")
-    help_embed.add_field(name="!weather (!wetter) 'ort'", value="Erklärt sich von selbst, huh? Wetter und so.")
-    help_embed.add_field(name="!hug @nutzername", value="Mal ein bisschen Liebe verschenken und die tolle Emoji Animation bewundern, die ich mit viel Liebe gebaut habe.")
-    help_embed.add_field(name="!startpoll 'umfrage' <sekunden>", value="Damit könnt ihr kleine Umfragen starten. Wird vermutlich eines der AgaCoins Features. Man kann aktuell noch mit Ja und Nein gleichzeitig stimmen, aber das bekomm' ich bestimmt auch noch in den Griff.")
-    help_embed.add_field(name="!info", value="Zeigt ein paar Statistiken von Agara.")
+    help_embed.add_field(name="aga!help (!hilfe)", value="Ähm ja, da bist du gerade.")
+    help_embed.add_field(name="aga!weather (!wetter) 'ort'", value="Erklärt sich von selbst, huh? Wetter und so.")
+    help_embed.add_field(name="aga!hug @nutzername", value="Mal ein bisschen Liebe verschenken und die tolle Emoji Animation bewundern, die ich mit viel Liebe gebaut habe.")
+    help_embed.add_field(name="aga!startpoll 'umfrage' <sekunden>", value="Damit könnt ihr kleine Umfragen starten. Wird vermutlich eines der AgaCoins Features. Man kann aktuell noch mit Ja und Nein gleichzeitig stimmen, aber das bekomm' ich bestimmt auch noch in den Griff.")
+    help_embed.add_field(name="aga!info", value="Zeigt ein paar Statistiken von Agara.")
+    # agacoins commands from here
     help_embed.add_field(name="__AgaCoins Befehle __", value="Hier sind die Befehle, für die ihr eure AgaCoins einsetzen könnt. Ich weiß, der Name der Währung ist unfassbar kreativ.", inline=True)
-    help_embed.add_field(name="!gif 'suchbegriff' | **kostet 1 AgaCoin**", value="Bring deine Gefühle mit 'nem GIF zum Ausdruck. Cat GIFs forever.")
+    help_embed.add_field(name="aga!gif 'suchbegriff' | **kostet 1 AgaCoin**", value="Bring deine Gefühle mit 'nem GIF zum Ausdruck. Cat GIFs forever.")
     await ctx.send(embed=help_embed)
 
 # run the bot
