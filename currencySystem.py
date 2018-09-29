@@ -94,3 +94,30 @@ class currencysystem:
         except Exception as err:
             currencysystem_balance_error = discord.Embed(title="Ups, da ist was schiefgelaufen", color=0xe74c3c, description="Entweder bist du noch gar nicht im Punktesystem, oder die Datenbank brennt mal wieder. Call 911.")
             await ctx.send(embed=currencysystem_balance_error)
+
+    async def leaderboard(ctx, bot):
+        db = mongo_client['agara']
+        currencysystem = db.currencysystem
+
+        usercount = 0
+        guildId = ctx.guild.id
+        find_guild = currencysystem.find_one({ "guildid" : guildId })
+
+        if find_guild != None:
+            five_highest = currencysystem.find({ "guildid" : guildId }, limit = 5).sort('balance', -1)
+
+            currencysystem_leaderboard = discord.Embed(title="Leaderboard", color=0x9b59b6)
+            count = 1
+            inline_state = False
+            for document in five_highest:
+                user = discord.Client.get_user(bot, id=document['userid'])
+                currencysystem_leaderboard.add_field(name=str(count) + ". " + str(user), value="**" + str(document['messagecount']) + "** Nachrichten | **" + str(round(document['balance'], 2)) + "** AgaCoins", inline=inline_state)
+                count += 1
+                if inline_state == False:
+                    inline_state = True
+                else:
+                    inline_state = False
+            await ctx.send(embed=currencysystem_leaderboard)
+        else:
+            currencysystem_leaderboard_error = discord.Embed(title="Server nicht Datenbank", color=0xe74c3c, description="Kein Nutzer aus diesem Server befindet sich in der Datenbank. Nutzer werden nach ihrer ersten Nachricht eingetragen.")
+            await ctx.send(embed=currencysystem_leaderboard_error)

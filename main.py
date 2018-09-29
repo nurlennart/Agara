@@ -11,7 +11,7 @@ from commands.startPoll import Poll
 from currencySystem import currencysystem
 
 # init bot
-bot = commands.Bot(command_prefix='!')
+bot = commands.Bot(command_prefix='aga!')
 bot.remove_command("help")
 # init config
 parser = SafeConfigParser()
@@ -60,7 +60,7 @@ async def on_message(message):
     userId = message.author.id
     guildId = message.guild.id
 
-    if message.content.startswith(('!', '?', '~')):
+    if message.content.startswith(('!', '?', '~', 'aga!')):
         return
     else:
         if(message.author.bot != True):
@@ -111,6 +111,14 @@ async def on_member_remove(member):
         await currencysystem.unregisterUser(member)
     else:
         return
+
+@bot.command(aliases=["bestenliste"])
+async def leaderboard(ctx):
+    await currencysystem.leaderboard(ctx, bot)
+
+@bot.command(aliases=["kontostand", "agacoins"])
+async def balance(ctx):
+    await currencysystem.showBalance(ctx)
 
 @bot.command(aliases=["wetter"])
 async def weather(ctx, City):
@@ -181,7 +189,6 @@ async def gif(ctx, query):
         userBalance = getFromDb['balance']
         if int(userBalance) >= 1:
             sendGif = await gifHandler.getGif(ctx, query)
-
             if sendGif == True:
                 currencysystem.update_one(
                     {"userid": userId, "guildid": guildId},
@@ -199,10 +206,6 @@ async def gif(ctx, query):
     else:
         user_not_in_currencysystem = discord.Embed(title="Das wird nichts.", description="Das ist ein AgaCoin Feature. Um dieses zu nutzen, musst du dich im Punktesystem registrieren (**!register**) und Punkte sammeln. Tu es, es lohnt sich! 🤫", color=0x9b59b6)
         await ctx.send(embed=user_not_in_currencysystem)
-
-@bot.command(aliases=["kontostand", "agacoins"])
-async def balance(ctx):
-    await currencysystem.showBalance(ctx)
 
 # !help
 @bot.command(aliases=["hilfe"])
