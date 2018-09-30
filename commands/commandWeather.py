@@ -6,7 +6,11 @@ import asyncio
 parser = SafeConfigParser()
 parser.read('config.ini')
 class weatherEmbed:
-    async def weatherGetter(ctx, City):
+    def __init__(self, ctx):
+        self._ctx = ctx
+
+    # get weather and send weather embed as response
+    async def weatherGetter(self, City):
         WeatherApiKey = parser.get('weather', 'apikey')
         url = 'https://api.openweathermap.org/data/2.5/weather?q=' + City + '&appid=' + WeatherApiKey + '&units=metric&lang=de'
 
@@ -30,8 +34,8 @@ class weatherEmbed:
             weather_embed.add_field(name="Luftfeuchtigkeit", value=str(weather_humidity) + " %", inline=True)
             weather_embed.add_field(name="Wind", value=str(int(weather_wind) * 3.6) + " km/h", inline=True)
 
-            await ctx.send(embed=weather_embed)
+            await self._ctx.send(embed=weather_embed)
 
         else:
             weather_error_embed = discord.Embed(title="Ups", description="Der angegebene Ort existiert vermutlich nicht.", color=0xe74c3c)
-            await ctx.send(embed=weather_error_embed)
+            await self._ctx.send(embed=weather_error_embed)

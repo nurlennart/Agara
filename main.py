@@ -8,7 +8,7 @@ from commands.commandWeather import weatherEmbed
 from commands.commandInfo import InfoEmbed
 from commands.commandGif import gifHandler
 from commands.startPoll import Poll
-from currencySystem import currencysystem
+from src.currencySystem import currencysystem
 
 # init bot
 bot = commands.Bot(command_prefix='aga!')
@@ -18,11 +18,12 @@ parser = SafeConfigParser()
 parser.read('config.ini')
 
 infoEmbed = InfoEmbed(bot)
-
 poll = Poll(bot)
+currency_system = currencysystem(bot)
 
 mongo_client = pymongo.MongoClient("mongodb+srv://" + str(parser.get('mongodb', 'auth_string')) + "@cluster0-1fhvf.mongodb.net/agara?retryWrites=true")
 
+# print that the bot is ready and all guilds to the database
 @bot.event
 async def on_ready():
     print('Logged in as')
@@ -54,6 +55,7 @@ async def updateGame():
     game = discord.Game(str(len(bot.guilds)) + " Server" + " | aga!hilfe")
     await bot.change_presence(activity=game)
 
+# process received messages as command or message for the currencysystem
 @bot.event
 async def on_message(message):
     await bot.process_commands(message)
@@ -64,15 +66,16 @@ async def on_message(message):
         return
     else:
         if(message.author.bot != True):
-            checkForUser = await currencysystem.userExists(userId, guildId)
+            checkForUser = await currency_system.userExists(userId, guildId)
             if(checkForUser != None):
-                await currencysystem.updateMessageCount(userId, guildId)
+                await currency_system.updateMessageCount(userId, guildId)
             else:
-                await currencysystem.registerUser(message)
-                await currencysystem.updateMessageCount(userId, guildId)
+                await currency_system.registerUser(message)
+                await currency_system.updateMessageCount(userId, guildId)
         else:
             return
 
+# add guild to guilds database on join
 @bot.event
 async def on_guild_join(guild):
     db = mongo_client['agara']
@@ -91,6 +94,7 @@ async def on_guild_join(guild):
 
     await updateGame()
 
+# delete guild from guilds database and unregister every from this guild in currencysystem on guild leave
 @bot.event
 async def on_guild_remove(guild):
     db = mongo_client['agara']
@@ -100,42 +104,51 @@ async def on_guild_remove(guild):
 
     await updateGame()
 
-    await currencysystem.unregisterWholeGuild(guild)
+    await currency_system.unregisterWholeGuild(guild)
 
+# remove member from database on remove/leave
 @bot.event
 async def on_member_remove(member):
     userId = member.id
     guildId = member.guild.id
 
-    if await currencysystem.userExists(userId, guildId) != None:
-        await currencysystem.unregisterUser(member)
+    if await currency_system.userExists(userId, guildId) != None:
+        await currency_system.unregisterUser(member)
     else:
         return
 
+# leaderboard command
 @bot.command(aliases=["bestenliste"])
 async def leaderboard(ctx):
-    await currencysystem.leaderboard(ctx, bot)
+    await currency_system.leaderboard(ctx)
+    print(str(ctx.message.author) + " requested the leaderboard of guild " + str(ctx.message.guild.id))
 
+# balance command
 @bot.command(aliases=["kontostand", "agacoins"])
 async def balance(ctx):
-    await currencysystem.showBalance(ctx)
+    await currency_system.showBalance(ctx)
+    print(str(ctx.message.author) + " requested his balance")
 
+# weather  command
 @bot.command(aliases=["wetter"])
 async def weather(ctx, City):
-    await weatherEmbed.weatherGetter(ctx, City)
+    weather = weatherEmbed(ctx)
+    await weather.weatherGetter(City)
     print(str(ctx.message.author) + " requested the weather of " + City)
 
+# info/stats command
 @bot.command()
 async def info(ctx):
     await ctx.send(embed=await infoEmbed.GenerateInfoEmbed(ctx))
 
+# poll command
 @bot.command()
 async def startpoll(ctx, question, seconds):
     print(str(ctx.message.author) + " started a new poll. It will end in " + seconds + " seconds")
 
     poll_message = await ctx.send(embed=await poll.GeneratePollEmbed(ctx, question, seconds))
-    upvote = await poll_message.add_reaction("➕")
-    downvote = await poll_message.add_reaction("➖")
+    await poll_message.add_reaction("➕")
+    await poll_message.add_reaction("➖")
     await asyncio.sleep(int(seconds))
 
     poll_message_ = await ctx.get_message(poll_message.id)
@@ -149,6 +162,7 @@ async def startpoll(ctx, question, seconds):
 
     await ctx.send(embed=await poll.GeneratePollResultEmbed(ctx, question, upvotes, downvotes))
 
+# hug command
 @bot.command()
 async def hug(ctx, userToHug):
     hugColor = 0x9b59b6
@@ -176,10 +190,14 @@ async def hug(ctx, userToHug):
     await asyncio.sleep(2)
     await message.edit(embed=embed7)
 
+# gif command
 @bot.command()
 async def gif(ctx, query):
+    print(str(ctx.message.author) + " requested a gif with the query " + str(query))
+
     userId = int(ctx.author.id)
     guildId = int(ctx.guild.id)
+    gif = gifHandler(bot)
 
     db = mongo_client['agara']
     currencysystem = db.currencysystem
@@ -188,7 +206,7 @@ async def gif(ctx, query):
     if getFromDb != None:
         userBalance = getFromDb['balance']
         if int(userBalance) >= 1:
-            sendGif = await gifHandler.getGif(ctx, query)
+            sendGif = await gif.getGif(ctx, query)
             if sendGif == True:
                 currencysystem.update_one(
                     {"userid": userId, "guildid": guildId},
@@ -212,11 +230,11 @@ async def gif(ctx, query):
 async def help(ctx):
     help_embed = discord.Embed(title="Hier werden Sie geholfen!", color=0x9b59b6)
     help_embed.add_field(name="__Punktesystem__\n", value="Das Punktesystem weist dir für jede geschriebene Nachricht 0.1 Punkte zu. In Zukunft wird es möglich sein, mit diesen Punkten exklusive Befehle zu nutzen. 🙂", inline=True)
-    help_embed.add_field(name="aga!balance (!kontostand, !agacoins)", value="Zeigt dir deinen aktuellen Kontostand")
+    help_embed.add_field(name="aga!balance (aga!kontostand, aga!agacoins)", value="Zeigt dir deinen aktuellen Kontostand")
     help_embed.add_field(name="aga!leaderboard", value="Zeigt dir die Nutzer mit den meisten Nachrichten/AgaCoins an")
     help_embed.add_field(name="__Allgemeine Befehle__", value="Agara hat noch mehr als nur das Punktesystem drauf, ich schwöre!", inline=True)
-    help_embed.add_field(name="aga!help (!hilfe)", value="Ähm ja, da bist du gerade.")
-    help_embed.add_field(name="aga!weather (!wetter) 'ort'", value="Erklärt sich von selbst, huh? Wetter und so.")
+    help_embed.add_field(name="aga!help (aga!hilfe)", value="Ähm ja, da bist du gerade.")
+    help_embed.add_field(name="aga!weather (aga!wetter) 'ort'", value="Erklärt sich von selbst, huh? Wetter und so.")
     help_embed.add_field(name="aga!hug @nutzername", value="Mal ein bisschen Liebe verschenken und die tolle Emoji Animation bewundern, die ich mit viel Liebe gebaut habe.")
     help_embed.add_field(name="aga!startpoll 'umfrage' <sekunden>", value="Damit könnt ihr kleine Umfragen starten. Wird vermutlich eines der AgaCoins Features. Man kann aktuell noch mit Ja und Nein gleichzeitig stimmen, aber das bekomm' ich bestimmt auch noch in den Griff.")
     help_embed.add_field(name="aga!info", value="Zeigt ein paar Statistiken von Agara.")

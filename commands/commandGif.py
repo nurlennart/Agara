@@ -6,7 +6,11 @@ import asyncio
 parser = SafeConfigParser()
 parser.read('config.ini')
 class gifHandler:
-    async def getGif(ctx, query):
+    def __init__(self, bot):
+        self._bot = bot
+
+    # get gif from giphy api and respond with an gif that fits the given keyword
+    async def getGif(self, ctx, query):
         GiphyApiKey = parser.get('giphy', 'apikey')
         url = 'https://api.giphy.com/v1/gifs/random?api_key=' + GiphyApiKey + '&tag=' + query + '&rating=G'
 
