@@ -125,6 +125,7 @@ class currencysystem:
                     inline_state = True
                 else:
                     inline_state = False
+            currencysystem_leaderboard.set_footer(text="seit dem 28.09.2018")
             await ctx.send(embed=currencysystem_leaderboard)
         else:
             currencysystem_leaderboard_error = discord.Embed(title="Server nicht in Datenbank", color=0xe74c3c, description="Kein Nutzer aus diesem Server befindet sich in der Datenbank. Nutzer werden nach ihrer ersten Nachricht eingetragen.")
