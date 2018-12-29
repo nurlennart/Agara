@@ -4,6 +4,7 @@ import json, requests
 from configparser import SafeConfigParser
 import asyncio
 import pymongo
+import datetime
 from commands.commandWeather import weatherEmbed
 from commands.commandInfo import InfoEmbed
 from commands.commandGif import gifHandler
@@ -69,7 +70,8 @@ async def on_message(message):
             checkForUser = await currency_system.userExists(userId, guildId)
             if(checkForUser != None):
                 await currency_system.updateMessageCount(userId, guildId)
-                print("received message, +0,1 agacoins for someone.")
+                currentTime = str(now.strftime("%H:%M"))
+                print(currentTime + " received message, +0,1 agacoins for someone.")
             else:
                 await currency_system.registerUser(message)
                 await currency_system.updateMessageCount(userId, guildId)
