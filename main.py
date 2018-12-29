@@ -70,6 +70,7 @@ async def on_message(message):
             checkForUser = await currency_system.userExists(userId, guildId)
             if(checkForUser != None):
                 await currency_system.updateMessageCount(userId, guildId)
+                now = datetime.datetime.now()
                 currentTime = str(now.strftime("%H:%M"))
                 print(currentTime + " received message, +0,1 agacoins for someone.")
             else:
