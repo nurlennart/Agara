@@ -38,7 +38,7 @@ class currencysystem:
             currencysystem_add_error = discord.Embed(title="Ups, da ist was schiefgelaufen", color=0xe74c3c, description="Entweder bist du bereits im Punktesystem, oder die Datenbank brennt mal wieder. Call 911.")
             await message.channel.send(embed=currencysystem_add_error)
 
-    # unregister a user 
+    # unregister a user
     async def unregisterUser(self, member):
         userId = int(member.id)
         guildId = int(member.guild.id)
