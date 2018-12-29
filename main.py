@@ -7,7 +7,7 @@ import pymongo
 from commands.commandWeather import weatherEmbed
 from commands.commandInfo import InfoEmbed
 from commands.commandGif import gifHandler
-from commands.startPoll import Poll
+from commands.commandStartPoll import Poll
 from src.currencySystem import currencysystem
 
 # init bot
@@ -129,7 +129,7 @@ async def balance(ctx):
     await currency_system.showBalance(ctx)
     print(str(ctx.message.author) + " requested his balance")
 
-# weather  command
+# weather command
 @bot.command(aliases=["wetter"])
 async def weather(ctx, City):
     weather = weatherEmbed(ctx)
