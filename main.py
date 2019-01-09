@@ -61,7 +61,9 @@ async def updateGame():
 async def on_message(message):
     await bot.process_commands(message)
     userId = message.author.id
+    username = message.author.name
     guildId = message.guild.id
+    guildName = message.guild.name
 
     if message.content.startswith(('!', '?', '~', 'aga!')):
         return
@@ -72,7 +74,7 @@ async def on_message(message):
                 await currency_system.updateMessageCount(userId, guildId)
                 now = datetime.datetime.now()
                 currentTime = str(now.strftime("%H:%M:%S"))
-                print(currentTime + " received message, +0,1 agacoins for someone.")
+                print(currentTime + " received message, +0,1 agacoins for {0} in guild {1}.".format(username, guildName))
             else:
                 await currency_system.registerUser(message)
                 await currency_system.updateMessageCount(userId, guildId)
