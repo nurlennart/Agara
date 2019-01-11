@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 import json, requests
-from configparser import SafeConfigParser
+from configparser import ConfigParser
 import asyncio
 import pymongo
 import datetime
@@ -15,14 +15,14 @@ from src.currencySystem import currencysystem
 bot = commands.Bot(command_prefix='aga!')
 bot.remove_command("help")
 # init config
-parser = SafeConfigParser()
+parser = ConfigParser()
 parser.read('config.ini')
 
 infoEmbed = InfoEmbed(bot)
 poll = Poll(bot)
 currency_system = currencysystem(bot)
 
-mongo_client = pymongo.MongoClient("mongodb+srv://" + str(parser.get('mongodb', 'auth_string')) + "@cluster0-1fhvf.mongodb.net/agara?retryWrites=true")
+mongo_client = pymongo.MongoClient("mongodb+srv://" + str(parser.get('mongodb', 'auth_string')) + "@cluster0-1fhvf.mongodb.net/agara?retryWrites=true", ssl=True)
 
 # print that the bot is ready and all guilds to the database
 @bot.event
@@ -34,7 +34,7 @@ async def on_ready():
 
     db = mongo_client['agara']
     guilds = db.guilds
-    guilds.ensure_index('guildId', unique=True)
+    guilds.create_index('guildId', unique=True)
     # add all guilds to database on startup
     for guild in bot.guilds:
         guildId = guild.id
@@ -74,7 +74,7 @@ async def on_message(message):
                 await currency_system.updateMessageCount(userId, guildId)
                 now = datetime.datetime.now()
                 currentTime = str(now.strftime("%H:%M:%S"))
-                print(currentTime + " received message, +0,1 agacoins for {0} in guild {1}.".format(username, guildName))
+                print("{0} received message, +0.1 agacoins for {1} in guild {2}.".format(currentTime, username, guildName))
             else:
                 await currency_system.registerUser(message)
                 await currency_system.updateMessageCount(userId, guildId)

@@ -1,13 +1,13 @@
 import discord
 from discord.ext import commands
-from configparser import SafeConfigParser
+from configparser import ConfigParser
 import asyncio
 import pymongo
 
-parser = SafeConfigParser()
+parser = ConfigParser()
 parser.read('config.ini')
 
-mongo_client = pymongo.MongoClient("mongodb+srv://" + str(parser.get('mongodb', 'auth_string')) + "@cluster0-1fhvf.mongodb.net/agara?retryWrites=true")
+mongo_client = pymongo.MongoClient("mongodb+srv://" + str(parser.get('mongodb', 'auth_string')) + "@cluster0-1fhvf.mongodb.net/agara?retryWrites=true", ssl=True)
 
 class currencysystem:
     def __init__(self, bot):

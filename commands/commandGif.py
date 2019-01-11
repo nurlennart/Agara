@@ -1,9 +1,9 @@
 import discord
 import json, requests
-from configparser import SafeConfigParser
+from configparser import ConfigParser
 import asyncio
 
-parser = SafeConfigParser()
+parser = ConfigParser()
 parser.read('config.ini')
 class gifHandler:
     def __init__(self, bot):
