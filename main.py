@@ -53,8 +53,7 @@ async def on_ready():
 
 async def updateGame():
     # change game
-   # game = discord.Game(str(len(bot.guilds)) + " Server" + " | aga!hilfe")#
-    game = discord.Game("Maintenance/Wartungsarbeiten")
+    game = discord.Game(str(len(bot.guilds)) + " Server" + " | aga!hilfe")
     await bot.change_presence(activity=game)
 
 # process received messages as command or message for the currencysystem
