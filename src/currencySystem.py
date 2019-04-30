@@ -136,5 +136,5 @@ class currencysystem:
         db = mongo_client['agara']
         currencysystem = db.currencysystem
 
-        userCount = currencysystem.count_documents()
+        userCount = currencysystem.count_documents(None)
         return userCount
