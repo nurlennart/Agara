@@ -39,3 +39,10 @@ class weatherEmbed:
         else:
             weather_error_embed = discord.Embed(title="Ups", description="Der angegebene Ort existiert vermutlich nicht.", color=0xe74c3c)
             await self._ctx.send(embed=weather_error_embed)
+
+        async def weatherForecastGetter(self, City):
+            WeatherApiKey = parser.get('weather', 'apikey')
+            url = 'https://api.openweathermap.org/data/2.5/forecast?q=' + City + '&mode=xml&appid=' + WeatherApiKey
+
+            resp  = requests.get(url=url)
+            data = resp.json()

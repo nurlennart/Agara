@@ -11,7 +11,7 @@ class InfoEmbed:
         bot_userCount = str(len(self._bot.users))
 
         currency_system = currencysystem(self._bot)
-        db_userCount = str(await currency_system.getUserCount)
+        db_userCount = str(await currency_system.getUserCount())
 
         info_embed = discord.Embed(title="Info", color=0x9b59b6)
         info_embed.add_field(name="Anzahl von Servern", value=bot_guildCount + " 🖥️", inline=True)
