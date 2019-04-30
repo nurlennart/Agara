@@ -53,7 +53,8 @@ async def on_ready():
 
 async def updateGame():
     # change game
-    game = discord.Game(str(len(bot.guilds)) + " Server" + " | aga!hilfe")
+   # game = discord.Game(str(len(bot.guilds)) + " Server" + " | aga!hilfe")#
+    game = discord.Game("Maintenance/Wartungsarbeiten")
     await bot.change_presence(activity=game)
 
 # process received messages as command or message for the currencysystem
@@ -141,12 +142,6 @@ async def weather(ctx, City):
     weather = weatherEmbed(ctx)
     await weather.weatherGetter(City)
     print(str(ctx.message.author) + " requested the weather of " + City)
-
-@bot.command(aliases=["wetter_vorhersage"])
-async def weather_forecast(ctx, City):
-    weather = weatherEmbed(ctx)
-    await weather.weatherForecastGetter(City)
-    print(str(ctx.message.author) + " requested the weather forecast of " + City)
 
 # info/stats command
 @bot.command()
