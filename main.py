@@ -45,7 +45,6 @@ async def on_ready():
         }
         try:
             result = guilds.insert_one(guildToInsert)
-            print(result)
         except Exception as err:
             print(str(err) + " while adding guild. It probably already exists in database.")
 
@@ -74,7 +73,6 @@ async def on_message(message):
                 await currency_system.updateMessageCount(userId, guildId)
                 now = datetime.datetime.now()
                 currentTime = str(now.strftime("%H:%M:%S"))
-                print("{0} received message, +0.1 agacoins for {1} in guild {2}.".format(currentTime, username, guildName))
             else:
                 await currency_system.registerUser(message)
                 await currency_system.updateMessageCount(userId, guildId)
@@ -87,16 +85,15 @@ async def on_guild_join(guild):
     db = mongo_client['agara']
     guilds = db.guilds
     guilds.ensure_index('guildId', unique=True)
-
+    print(f"joined new guild {guild.name}")
     guildToInsert = {
         'guildName' : guild.name,
         'guildId' : guild.id
     }
     try:
         result = guilds.insert_one(guildToInsert)
-        print("guild added to database. result:" + str(result))
     except Exception as err:
-        print(str(err) + " while adding joined guild. It probably already exists in database.")
+        print(str(err) + " while adding joined guild. It probably exists in database already.")
 
     await updateGame()
 
@@ -106,10 +103,7 @@ async def on_guild_remove(guild):
     db = mongo_client['agara']
     guilds = db.guilds
     result = guilds.delete_one( { "guildId" :guild.id } )
-    print(result)
-
     await updateGame()
-
     await currency_system.unregisterWholeGuild(guild)
 
 # remove member from database on remove/leave
@@ -127,20 +121,17 @@ async def on_member_remove(member):
 @bot.command(aliases=["bestenliste"])
 async def leaderboard(ctx):
     await currency_system.leaderboard(ctx)
-    print(str(ctx.message.author) + " requested the leaderboard of guild " + str(ctx.message.guild.id))
 
 # balance command
 @bot.command(aliases=["kontostand", "agacoins"])
 async def balance(ctx):
     await currency_system.showBalance(ctx)
-    print(str(ctx.message.author) + " requested his balance")
 
 # weather command
 @bot.command(aliases=["wetter"])
 async def weather(ctx, City):
     weather = weatherEmbed(ctx)
     await weather.weatherGetter(City)
-    print(str(ctx.message.author) + " requested the weather of " + City)
 
 # info/stats command
 @bot.command()
@@ -150,8 +141,6 @@ async def info(ctx):
 # poll command
 @bot.command()
 async def startpoll(ctx, question, seconds):
-    print(str(ctx.message.author) + " started a new poll. It will end in " + seconds + " seconds")
-
     poll_message = await ctx.send(embed=await poll.GeneratePollEmbed(ctx, question, seconds))
     await poll_message.add_reaction("➕")
     await poll_message.add_reaction("➖")
@@ -199,8 +188,6 @@ async def hug(ctx, userToHug):
 # gif command
 @bot.command()
 async def gif(ctx, query):
-    print(str(ctx.message.author) + " requested a gif with the query " + str(query))
-
     userId = int(ctx.author.id)
     guildId = int(ctx.guild.id)
     gif = gifHandler(bot)

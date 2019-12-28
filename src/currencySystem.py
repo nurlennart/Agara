@@ -32,7 +32,6 @@ class currencysystem:
         }
         try:
             currencysystem.insert_one(userRegistrationInfo)
-            print("user " + userName + " added to currencySystem")
         except Exception as err:
             print(str(err) + " while adding user to currencySystem. It probably already exists in database.")
             currencysystem_add_error = discord.Embed(title="Ups, da ist was schiefgelaufen", color=0xe74c3c, description="Entweder bist du bereits im Punktesystem, oder die Datenbank brennt mal wieder. Call 911.")
@@ -48,7 +47,6 @@ class currencysystem:
         currencysystem = db.currencysystem
         try:
             currencysystem.delete_one( { "userid" :userId, "guildid" :guildId } )
-            print("user " + userName + " removed from currencySystem")
         except Exception as err:
             print(str(err) + " while removing user from currencySystem.")
 
